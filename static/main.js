@@ -1,6 +1,69 @@
 var game_data,
     user_data,
     board_data,
+    submit_board = function() {
+        boardname = $('#board_name').val();
+        $.ajax ({
+            url: Amazing.url + '/board/',
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({id: board.id, width: board.width, height: board.height}),
+            success: function(r) {
+                console.log(r);
+            }
+        });
+    },
+    make_user = function() {
+        var username_val = $('#username_input').val();
+        $.ajax ({
+            url: Amazing.url + '/user/',
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({name: username_val}),
+            success: function(r) {
+                console.log(r);
+            } 
+        });
+        location.reload();
+    },
+    del_user = function(e) {
+        var $el = $(e.currentTarget);
+        var id = $el.data('id');
+        $.ajax ({
+            url: Amazing.url + '/user/' + id,
+            method: 'delete',
+            contentType: 'application/json'
+        });
+        location.reload();
+    },
+    post_game = function() {
+        var gamename_val = $('#game_name').val();
+        $.ajax ({
+            url: Amazing.url + '/game/',
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({name: gamename_val, owner_id: Amazing.user.id}),
+            success: function(r) {
+                console.log(r);
+            }
+        });
+        location.reload();
+    },
+    del_game = function() {
+        var $el = $(e.currentTarget),
+        id = $el.data('game_id');
+        $.ajax ({
+            url: Amazing.url + '/game/' + id,
+            method: 'delete',
+            contentType: 'application/json',
+            success: function() {
+                $el.parents('tr').remove();
+            }
+        });
+    },
+    submit_board = function() {
+        var board_name = $('#board_name').val();
+    }
     render = _.after(3, function() {
         var html = '<h3>USERS</h3><table>';
         for (var e=0;e<user_data.length;e++) {
@@ -21,37 +84,15 @@ var game_data,
         $('.body').on('click', '#link', function() {
             var username = '<p>Username:</p><input id = "username_input"><br><br><button id = "submit">Submit</button>';
             $('.body').html(username);
-            $('#submit').on('click', function() {
-                var username_val = $('#username_input').val();
-                $.ajax ({
-                    url: Amazing.url + '/user/',
-                    method: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify({name: username_val}),
-                    success: function(r) {
-                        console.log(r);
-                    } 
-                });
-                location.reload();
-            });
+            $('#submit').on('click', make_user)
         });
-        $('.body').on('click', '.link2', function(e) {
-            var $el = $(e.currentTarget);
-            var id = $el.data('id');
-            $.ajax ({
-                url: Amazing.url + '/user/' + id,
-                method: 'delete',
-                contentType: 'application/json'
-            });
-            location.reload();
-        });
+        $('.body').on('click', '.link2', del_user)
         html += '<br><br><br><br><h3>GAMES</h3><table>';
         for (var e=0;e<game_data.length;e++) {
             html += '<tr>';
             html += '<td><a href = #! class = "joinGame">' + game_data[e].name + '</a></td>' + '<td><a class = "link4" href=#! data-game_id=' + game_data[e].id + '>Delete game</a></td>';
             html += '</tr>';
         }
-
         html += '<tr id="new-game-row">';
         html += '<td><a id = "link3" href=#!>Add new game</a></td>';
         html += '</tr>';
@@ -65,33 +106,9 @@ var game_data,
         $('.body').on('click', '#link3', function(e) {
             var gameName = '<p>Game Name:</p><br><input id = "game_name"><br><br><br><button id = "submit2">Submit</button>';
             $('.body').html(gameName);
-            $('#submit2').on('click', function() {
-                var gamename_val = $('#game_name').val();
-                $.ajax ({
-                    url: Amazing.url + '/game/',
-                    method: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify({name: gamename_val, owner_id: Amazing.user.id}),
-                    success: function(r) {
-                        console.log(r);
-                    }
-                });
-                location.reload();
-            });
+            $('#submit2').on('click', post_game)
         });
-        $('.body').on('click', '.link4', function(e) {
-            var $el = $(e.currentTarget),
-                id = $el.data('game_id');
-            $.ajax ({
-                url: Amazing.url + '/game/' + id,
-                method: 'delete',
-                contentType: 'application/json',
-                success: function() {
-                    $el.parents('tr').remove();
-                }
-            });
-        });
-
+        $('.body').on('click', '.link4', del_game)
         html += '<br><br><br><br><h3>BOARDS</h3><table>'
         for (e=0;e<board_data.length;e++) {
             html += '<tr>'
@@ -103,26 +120,16 @@ var game_data,
         html += '</tr>';
         html += '</table>';
         $('.body').html(html);
-
         if (!Amazing.user) {
             $('#new-board-row').hide();
         }
-
         $('.body').on('click', '#link5', function(e) {
-            var boardName = '<p>Board Name</p><br><br><input id="board_name"><br><br><button id="submit_board">Submit</button>'
+            var boardName = '<p>Board Name</p><br><br>' +
+            '<input id="board_name"><br><br><p>Height</p>' +
+            '<input id="mazeHeight"<br><p>Width</p><input id="mazeWidth">' +
+            '<table></table>'
             $('.body').html(boardName);
-            $('.body').on('click', '#submit_board', function(e) {
-                boardname = $('#board_name').val();
-                $.ajax ({
-                    url: Amazing.url + '/board/',
-                    method: 'post',
-                    contentType: 'application/json'
-                    data: JSON.stringify({id: board.id, width: board.width, height: board.height}),
-                    success: function(r) {
-                        console.log(r);
-                    }
-                });
-            });
+            $('.body').on('click', '#submit_board', submit_board)
         });
     });
 
@@ -145,4 +152,4 @@ $.ajax ({
     success: function(r) {
         board_data = r.data;
         render();
-    }})
+    }});
