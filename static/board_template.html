@@ -1,0 +1,18 @@
+<table class='board' data-id="<%- board.id %>">
+    <% _.each(squares, function(row) { %>
+        <tr>
+            <% _.each(row, function(square) { %>
+                <td
+                    data-id='<%- square.id %>'
+                    class='
+                        <% if (square.up) { %>up<% } %>
+                        <% if (square.left) { %>left<% } %>
+                        <% if (square.down) { %>down<% } %>
+                        <% if (square.right) { %>right<% } %>
+                    '
+                    >
+                </td>
+            <% }); %>
+        </tr>
+    <% }); %>
+</table>
