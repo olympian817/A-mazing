@@ -21,8 +21,20 @@ class RestView(FlaskView):
         return self.json(model.get_dictionary())
 
 	def post(self):
-		
+		model = self.Model(**request.json)
+		db.session.add(model)
+		db.session.commit()
+		return self.json(model.get_dictionary())
 
 	def put(self, id_):
+		model = db.session.query(self.Model).filter(self.Model.id_==id_).first()
+		if not model:
+			raise NotFound
+		model.update(request.json)
+		db.session.add(model)
+		db.session.commit()
+		return self.json(model.get_dictionary())
 
 	def delete(self, id_):
+		model = db.session.query(self.Model).filter(self.Model.id_==id_).first()
+		
