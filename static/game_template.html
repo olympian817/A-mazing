@@ -1,0 +1,11 @@
+<select>
+<%
+  for (e=0; e<boards.length; e++) {
+    var board=boards[e];
+    %>
+    <option "<%- value=board.id %>"><% board.name %></option>
+    <%
+  }
+%>
+
+<p>Game Name:</p><br><input id = "game_name"><br><br><label>[Select Board]</label><br><br><button id = "submit2">Submit</button>

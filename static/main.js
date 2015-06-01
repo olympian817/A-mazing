@@ -4,6 +4,30 @@ var game_data,
     sq_display = function() {
         _.template('<td data-id=<%- square_id %>></td>')
     },
+    render_game = function(game) {
+        var template, board_list;
+        var after_fetch = _.after(2, function() {
+            $('.body').html(_.template(template) ({
+                board: board
+            }));
+        });
+
+        $.ajax ({
+            url: 'game_template.html',
+            method: 'get',
+            success: function(template_data) {
+                template = template_data;
+                after_fetch();
+            } 
+        });
+        $.ajax({
+            url: Amazing.url + '/board/',
+            method: 'get',
+            success: function(board_list) {
+                board_list = board_list
+            }
+        })
+    },
     render_board = function(board) {
         var template, squares;
 
@@ -219,12 +243,12 @@ var game_data,
         }
 
         $('.body').on('click', '#link3', function(e) {
-            var gameName = '<p>Game Name:</p><br><input id = "game_name"><br><br><select><option>[Select Board]</option></select><br><br><button id = "submit2">Submit</button>';
+            var gameName = '' + render_board() + '';
             $('.body').html(gameName);
             $('#submit2').on('click', post_game)
         });
         $('.body').on('click', '.link4', del_game)
-        html += '<br><br><br><br><h3>BOARDS</h3><table>'
+        html        += '<br><br><br><br><h3>BOARDS</h3><table>'
         for (e=0;e<board_data.length;e++) {
             html += '<tr>'
             html += '<td>' + board_data[e].name + '</td>' + '<td><a class = "link6" href=#! data-id=' + board_data[e].id + '>Delete board</a></td>';
