@@ -1,4 +1,4 @@
-from amazing.lib.base import ModelMixin
+from amazing.models.base import ModelMixin
 from amazing.lib.database import db
 import bcrypt
 

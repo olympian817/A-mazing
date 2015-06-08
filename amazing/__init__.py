@@ -17,4 +17,7 @@ def create_app(con):
     with app.app_context():
     	db.create_all()
     
+    from amazing.lib.season import MazesSessionInferface
+    app.session_inferface = MazesSessionInferface
+
     return app

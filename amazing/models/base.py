@@ -1,8 +1,9 @@
-from sqlalchemy.ext.declarative import declaredattr
+from sqlalchemy.ext.declarative import declared_attr
+from amazing.lib.database import db
 
 class ModelMixin(object):
 
-	@declaredattr
+	@declared_attr
 	def __tablename__(cls):
 		return cls.__name__.lower()
 

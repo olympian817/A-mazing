@@ -7,5 +7,5 @@ class BoardView(RestView):
     Model = Board
         
 
-class SquareView(FlaskView):
+class SquareView(RestView):
     Model = Square

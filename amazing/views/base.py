@@ -5,36 +5,41 @@ from amazing.lib.database import db
 
 
 class RestView(FlaskView):
-	Model = None
+    Model = None
 
-	def json(self, obj, status=200):
-		return jsonify(data=obj), status
+    def json(self, obj, status=200):
+        return jsonify(data=obj), status
 
-	def index(self):
-		return self.json([
-			m.get_dictionary() for m in db.session.query(self.Model).all()])
+    def index(self):
+        return self.json([
+            m.get_dictionary() for m in db.session.query(self.Model).all()
+        ])
 
-	def get(self, id_):
-        model = db.session.query(self.Model).filter(Board.id==id).first()
+    def get(self, id_):
+        model = db.session.query(self.Model).filter(self.Model.id_==id_).first()
         if not model:
-        	raise NotFound
+            raise NotFound
         return self.json(model.get_dictionary())
 
-	def post(self):
-		model = self.Model(**request.json)
-		db.session.add(model)
-		db.session.commit()
-		return self.json(model.get_dictionary())
+    def post(self):
+        model = self.Model(**request.json)
+        db.session.add(model)
+        db.session.commit()
+        return self.json(model.get_dictionary())
 
-	def put(self, id_):
-		model = db.session.query(self.Model).filter(self.Model.id_==id_).first()
-		if not model:
-			raise NotFound
-		model.update(request.json)
-		db.session.add(model)
-		db.session.commit()
-		return self.json(model.get_dictionary())
+    def put(self, id_):
+        model = db.session.query(self.Model).filter(self.Model.id_==id_).first()
+        if not model:
+            raise NotFound
+        model.update(request.json)
+        db.session.add(model)
+        db.session.commit()
+        return self.json(model.get_dictionary())
 
-	def delete(self, id_):
-		model = db.session.query(self.Model).filter(self.Model.id_==id_).first()
-		
+    def delete(self, id_):
+        model = db.session.query(self.Model).filter(self.Model.id_==id_).first()
+        if not model:
+            raise NotFound
+        db.session.delete(model)
+        db.session.commit()
+        return self.json({}, 204)
