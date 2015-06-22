@@ -4,11 +4,12 @@ from flask import jsonify, request
 from amazing.lib.database import db
 
 
-class RestView(FlaskView):
-    Model = None
-
+class View(FlaskView):
     def json(self, obj, status=200):
         return jsonify(data=obj), status
+
+class RestView(View):
+    Model = None
 
     def index(self):
         return self.json([

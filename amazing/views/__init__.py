@@ -7,3 +7,4 @@ def register(app):
     game.GameView.register(app, route_base='/game/')
     board.BoardView.register(app, route_base='/board/')
     board.SquareView.register(app, route_base='/square/')
+    user.SessionView.register(app, route_base='/session/')

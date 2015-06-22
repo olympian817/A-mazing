@@ -1,2 +1,3 @@
 DEBUG = True
+SECRET_KEY = '\x96\x14W\xeb\xfaZ\xa5\x11\r]C\r\xab\x93\xab\x93\x8e\xaa\xb6\x87d\xa1\xa2E'
 SQLALCHEMY_DATABASE_URI = 'sqlite:///amazing.db'

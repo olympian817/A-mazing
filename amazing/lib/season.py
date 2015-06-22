@@ -12,5 +12,5 @@ class Session(SecureCookieSession):
     def get_dictionary(self):
         return {'user_id': self.get('user_id')}
 
-class MazesSessionInferface(SecureCookieSessionInterface):
+class MazesSessionInterface(SecureCookieSessionInterface):
     session_class = Session
